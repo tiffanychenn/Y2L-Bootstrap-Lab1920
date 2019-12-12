@@ -8,25 +8,174 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css">
-    <title>Hello, world!</title>
+    <title>calculator</title>
   </head>
   <body>
   <div class="container text-center">
     <div class="row justify-content-center">
       <div class="calcBG row col-md-3 ">
         <small>Bootstrap Calculator</small>
-        <!-- Write you calculator code here -->
+        <!-- Write your calculator code here -->
+        <div class="container">
+          <div class="row">
+            <textarea class="form-control" rows="2"></textarea>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('C')">C</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('_')">_</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('^')">^</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('%')">%</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(7)">7</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(8)">8</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(9)">9</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('/')">/</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(4)">4</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(5)">5</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(6)">6</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('*')">*</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(1)">1</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(2)">2</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(3)">3</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('-')">-</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" onclick="calculate(0)">0</button>
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('=')">=</button>
+            </div>
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-primary" onclick="calculate('+')">+</button>
+            </div>
+          </div>
+        </div>
 
 
 
-        
       </div>
     </div>
   </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+      var listOfInputs = [];
+      var textarea = document.getElementsByTagName('textarea')[0];
 
+      function calculate(input){
+        if (listOfInputs.length == 0){
+          textarea.innerHTML = "";
+        }
+        if (input === '='){
+          let index = 2;
+          let value = 0;
+          while (index < listOfInputs.length){
+            op = listOfInputs[index - 1]
+            var first_op;
+            if (index === 2){
+              first_op = listOfInputs[0];
+            }
+            else {
+              first_op = value;
+            }
+            if (op === '+'){
+              value = first_op + listOfInputs[index];
+            }
+            else if (op === '-'){
+              value = first_op - listOfInputs[index];
+            }
+            else if (op === '*'){
+              value = first_op * listOfInputs[index];
+            }
+            else if (op === '/') {
+              value = first_op / listOfInputs[index];
+            }
+            else if (op === '%') {
+              value = first_op % listOfInputs[index];
+            }
+            else if (op === '^') {
+              value = first_op ** listOfInputs[index];
+            }
+            index += 2;
+          }
+          textarea.innerHTML = value;
+          listOfInputs = [];
+        }
+        else if (input === 'C'){
+          listOfInputs = [];
+          textarea.innerHTML = "";
+        }
+        else if (input === '_'){
+          let last = listOfInputs[listOfInputs.length - 1];
+          if (typeof(last) === 'number'){
+            listOfInputs = listOfInputs.slice(0, listOfInputs.length - 1).concat(last * -1);
+          }
+          textarea.innerHTML = textarea.innerHTML.replace(String(last), String(last * -1));;
+        }
+        else if (typeof(input) === "number"){
+          if (listOfInputs.length == 0){
+            listOfInputs.push(input);
+          }
+          else {
+            let last = listOfInputs[listOfInputs.length - 1];
+            if (typeof(last) === 'string'){
+              listOfInputs.push(input);
+            }
+            else {
+              listOfInputs = listOfInputs.slice(0, listOfInputs.length - 1).concat(last * 10 + input);
+            }
+          }
+          textarea.innerHTML += String(input) + " ";
+        }
+        else {
+          listOfInputs.push(input);
+          textarea.innerHTML += input + " ";
+        }
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
 </html>
-
-
